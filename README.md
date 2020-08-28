@@ -70,7 +70,7 @@ provider:
 
 ```
 $ sls deploy -s dev -v
-``
+```
 
 ### test
 
