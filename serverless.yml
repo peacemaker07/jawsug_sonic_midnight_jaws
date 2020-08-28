@@ -23,6 +23,8 @@ service: jawsug-sonic-midnight-jaws
 provider:
   name: aws
   runtime: python3.8
+  stage: ${opt:stage}
+  region: ap-northeast-1
   profile: jaws_ug
 
 # you can overwrite defaults here
@@ -102,16 +104,39 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+resources:
+  Resources:
+    #
+    # S3 bucketの構築
+    #
+    MockAwsWithMotoBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: mock-aws-with-moto-${opt:stage}
+    #
+    # DynamoDBのテーブル構築
+    #
+    #
+    DynamoDbS3Info:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: s3-info-${opt:stage}
+        AttributeDefinitions:
+          - AttributeName: group_id
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
+        KeySchema:
+          - AttributeName: group_id
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        # プロビジョニング用設定値
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+        # On-Demand用設定値
+        # BillingMode: PAY_PER_REQUES
 
 plugins:
   - serverless-python-requirements
