@@ -1,0 +1,3 @@
+-r requirements.txt
+pytest==6.0.1
+pytest-serverless==0.10.1  # motoもはいる

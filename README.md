@@ -30,16 +30,16 @@ https://serverless.com/framework/docs/getting-started/
 $ sls plugin install -n serverless-python-requirements
 ```
 
-### create or clone
+### clone
 
-本リポジトリをcloneせずにいちから作成したい
+```
+$ git clone git@github.com:peacemaker07/jawsug_sonic_midnight_jaws.git
+```
+
+※ 本リポジトリをcloneせずにいちから作成したい場合
 
 ```
 $ serverless create --template aws-python3 --name jawsug-sonic-midnight-jaws --path jawsug_sonic_midnight_jaws
-```
-or
-```
-$ git clone git@github.com:peacemaker07/jawsug_sonic_midnight_jaws.git
 ```
 
 ### deploy用のprofileを作成
@@ -71,3 +71,17 @@ provider:
 ```
 $ sls deploy -s dev -v
 ``
+
+### test
+
+ライブラリのインストール
+
+```
+$ pip install -r requirements-dev.txt
+```
+
+実行
+
+```
+$ pytest -v tests/
+```
