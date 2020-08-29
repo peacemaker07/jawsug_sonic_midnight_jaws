@@ -61,8 +61,26 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  s3_trigger_and_move:
+    handler: handler.s3_trigger_and_move
+    role: S3TriggerAndMoveRole
+    events:
+      - s3:
+          bucket: mock-aws-with-moto-${opt:stage}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
+            - suffix: .jpg
+          existing: true
+  sqs_trigger_and_save:
+    handler: handler.sqs_trigger_and_save
+    role: SqsTriggerAndSaveRole
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - MockSampleQueue
+              - Arn
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -116,18 +134,17 @@ resources:
     #
     # DynamoDBのテーブル構築
     #
-    #
     DynamoDbS3Info:
       Type: "AWS::DynamoDB::Table"
       Properties:
         TableName: s3-info-${opt:stage}
         AttributeDefinitions:
-          - AttributeName: group_id
+          - AttributeName: bucket_name
             AttributeType: S
           - AttributeName: timestamp
             AttributeType: N
         KeySchema:
-          - AttributeName: group_id
+          - AttributeName: bucket_name
             KeyType: HASH
           - AttributeName: timestamp
             KeyType: RANGE
@@ -137,6 +154,123 @@ resources:
           WriteCapacityUnits: 3
         # On-Demand用設定値
         # BillingMode: PAY_PER_REQUES
+
+    #
+    # SQS Queueの構築
+    #
+    MockSampleQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: mock-sample-queue-${opt:stage}
+
+    #
+    # Role, Policy
+    #
+    # S3 Triggerで実行され、画像を移動するLambda実行時のRole
+    S3TriggerAndMoveRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        RoleName: S3TriggerAndMoveRole
+        AssumeRolePolicyDocument:
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: S3TriggerPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - 'Fn::Join':
+                        - ':'
+                        - - 'arn:aws:logs'
+                          - Ref: 'AWS::Region'
+                          - Ref: 'AWS::AccountId'
+                          - '*'
+                - Effect: Allow
+                  Action:
+                    - s3:ListBucket
+                  Resource:
+                    - 'Fn::Join':
+                        - ''
+                        - - 'arn:aws:s3:::'
+                          - Ref: MockAwsWithMotoBucket
+                - Effect: Allow
+                  Action:
+                    - s3:GetObject
+                    - s3:PutObject
+                    - s3:DeleteObject
+                  Resource:
+                    - 'Fn::Join':
+                        - ''
+                        - - 'arn:aws:s3:::'
+                          - Ref: MockAwsWithMotoBucket
+                          - '/*'
+                - Effect: Allow
+                  Action:
+                    - ssm:GetParameter
+                  Resource: '*'
+                - Effect: Allow
+                  Action:
+                    - sqs:GetQueueAttributes
+                    - sqs:SendMessage
+                    - sqs:GetQueueUrl
+                  Resource: '*'
+    # SQS Triggerで実行され、DynamoDBへ保存を行うLambda実行時のRole
+    SqsTriggerAndSaveRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        RoleName: SqsTriggerAndSaveRole
+        AssumeRolePolicyDocument:
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: S3TriggerPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - 'Fn::Join':
+                        - ':'
+                        - - 'arn:aws:logs'
+                          - Ref: 'AWS::Region'
+                          - Ref: 'AWS::AccountId'
+                          - '*'
+                - Effect: Allow
+                  Action:
+                    - sqs:DeleteMessage
+                    - sqs:GetQueueAttributes
+                    - sqs:ReceiveMessage
+                  Resource: '*'
+                - Effect: Allow
+                  Action:
+                    - dynamodb:PutItem
+                  Resource:
+                    - 'Fn::Join':
+                        - ':'
+                        - - 'arn:aws:dynamodb'
+                          - Ref: 'AWS::Region'
+                          - Ref: 'AWS::AccountId'
+                          - '*'
 
 plugins:
   - serverless-python-requirements

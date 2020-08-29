@@ -1,1 +1,2 @@
-from handler.handler import hello
+from handler.s3_trigger_and_move import s3_trigger_and_move
+from handler.sqs_trigger_and_save import sqs_trigger_and_save
