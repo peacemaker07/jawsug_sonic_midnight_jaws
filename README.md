@@ -77,11 +77,14 @@ $ sls deploy -s dev -v
 ライブラリのインストール
 
 ```
-$ pip install -r requirements-dev.txt
+# 仮想環境を作成
+$ python3.8 -m venv env
+$ source env/bin/activate
+(env) $ pip install -r requirements-dev.txt
 ```
 
 実行
 
 ```
-$ pytest -v tests/
+(env) $ pytest -v tests/
 ```
