@@ -19,11 +19,11 @@ def setup_s3(bucket_name, obj_key=None):
         result = bucket.put_object(Key=obj_key, Body=data)
 
 
-def setup_dynamodb_s3_info():
+def setup_dynamodb_s3_info(table_name):
     dynamodb = boto3.resource(service_name='dynamodb', region_name='ap-northeast-1')
 
     dynamodb.create_table(
-        TableName='s3-info-dev',
+        TableName=table_name,
         KeySchema=[
             {
                 'AttributeName': 'bucket_name',

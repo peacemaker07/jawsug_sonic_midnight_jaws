@@ -59,7 +59,7 @@ def s3_trigger_event():
 @mock_s3
 @mock_sqs
 @mock_ssm
-def test_success(s3_trigger_event):
+def test_s3trigger_and_move_success(s3_trigger_event):
     """
     画像の移動が正常に行われ、SQSへS3の情報を送信すること
     """
