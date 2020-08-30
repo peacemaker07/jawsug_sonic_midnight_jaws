@@ -91,3 +91,8 @@ def test_s3trigger_and_move_success(s3_trigger_event):
     assert len(message_body) == 2
     assert message_body['bucket_name'] == bucket_name
     assert message_body['obj_key'] == obj_key
+
+    # 後処理
+    # TODO Bucketを空にしておかないとpytest-serverlessの後処理でエラーとなってしまうため
+    #      (Bucketが空でなく削除できないというエラーがでてしまう)
+    response = s3.delete_object(Bucket=bucket_name, Key=to_obj_key)
