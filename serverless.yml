@@ -23,7 +23,7 @@ service: jawsug-sonic-midnight-jaws
 provider:
   name: aws
   runtime: python3.8
-  stage: ${opt:stage}
+  stage: dev
   region: ap-northeast-1
   profile: jaws_ug
 
@@ -66,7 +66,7 @@ functions:
     role: S3TriggerAndMoveRole
     events:
       - s3:
-          bucket: mock-aws-with-moto-${opt:stage}
+          bucket: mock-aws-with-moto-dev
           event: s3:ObjectCreated:*
           rules:
             - prefix: uploads/
@@ -130,14 +130,14 @@ resources:
     MockAwsWithMotoBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: mock-aws-with-moto-${opt:stage}
+        BucketName: mock-aws-with-moto-dev
     #
     # DynamoDBのテーブル構築
     #
     DynamoDbS3Info:
       Type: "AWS::DynamoDB::Table"
       Properties:
-        TableName: s3-info-${opt:stage}
+        TableName: s3-info-dev
         AttributeDefinitions:
           - AttributeName: bucket_name
             AttributeType: S
@@ -161,7 +161,7 @@ resources:
     MockSampleQueue:
       Type: "AWS::SQS::Queue"
       Properties:
-        QueueName: mock-sample-queue-${opt:stage}
+        QueueName: mock-sample-queue-dev
 
     #
     # Role, Policy

@@ -3,12 +3,8 @@ from datetime import datetime
 import json
 import pytest
 import boto3
-from moto import mock_dynamodb2
 import freezegun
 
-from tests.resources.aws import (
-    setup_dynamodb_s3_info,
-)
 from handler import sqs_trigger_and_save
 
 dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-1')
@@ -39,7 +35,7 @@ def sqs_trigger_event():
     }
 
 
-@mock_dynamodb2
+@pytest.mark.usefixtures('serverless')
 @freezegun.freeze_time('2020-09-12 18:05:59')
 def test_sqs_trigger_and_save(sqs_trigger_event):
 
@@ -48,7 +44,6 @@ def test_sqs_trigger_and_save(sqs_trigger_event):
     bucket_name = message_body['bucket_name']
     obj_key = message_body['obj_key']
     table_name = 's3-info-dev'
-    setup_dynamodb_s3_info(table_name)
 
     # 実行
     sqs_trigger_and_save(sqs_trigger_event, '')
