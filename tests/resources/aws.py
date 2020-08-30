@@ -14,9 +14,15 @@ def setup_s3(bucket_name, obj_key=None):
     # put
     if obj_key:
         # put image
-        bucket = s3.Bucket(bucket_name)
-        data = open(os.path.join(get_abspath(), 'GL_LOGO.jpg'), mode='rb')
-        result = bucket.put_object(Key=obj_key, Body=data)
+        put_image(bucket_name, obj_key)
+
+
+def put_image(bucket_name, obj_key):
+
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket(bucket_name)
+    data = open(os.path.join(get_abspath(), 'GL_LOGO.jpg'), mode='rb')
+    result = bucket.put_object(Key=obj_key, Body=data)
 
 
 def setup_dynamodb_s3_info(table_name):

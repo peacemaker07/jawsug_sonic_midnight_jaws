@@ -5,6 +5,7 @@ from botocore.exceptions import ClientError
 from moto import mock_ssm
 
 from tests.resources.aws import (
+    put_image,
     setup_parameter_store,
     get_sqs_messages,
 )
@@ -53,6 +54,7 @@ def s3_trigger_event():
         }]
     }
 
+
 @pytest.mark.usefixtures('serverless')
 @mock_ssm
 def test_s3trigger_and_move_success(s3_trigger_event):
@@ -62,6 +64,7 @@ def test_s3trigger_and_move_success(s3_trigger_event):
     # setup
     bucket_name = s3_trigger_event['Records'][0]['s3']['bucket']['name']
     obj_key = s3_trigger_event['Records'][0]['s3']['object']['key']
+    put_image(bucket_name, obj_key)
     queue_name = 'mock-sample-queue-dev'
     setup_parameter_store('mock_sqs_queue_name', queue_name)
 
