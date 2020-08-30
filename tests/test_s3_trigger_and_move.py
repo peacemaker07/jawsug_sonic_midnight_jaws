@@ -39,7 +39,7 @@ def s3_trigger_event():
                 "s3SchemaVersion": "1.0",
                 "configurationId": "jawsug-sonic-midnight-jaws-dev-s3_trigger_and_move-e9570fa7c86cce4df943f4c116563d60",
                 "bucket": {
-                    "name": "mock-aws-with-moto-test",
+                    "name": "mock-aws-with-moto-dev",
                     "ownerIdentity": {
                         "principalId": "XXXX"
                     },
@@ -67,7 +67,7 @@ def test_s3trigger_and_move_success(s3_trigger_event):
     bucket_name = s3_trigger_event['Records'][0]['s3']['bucket']['name']
     obj_key = s3_trigger_event['Records'][0]['s3']['object']['key']
     setup_s3(bucket_name, obj_key=obj_key)
-    queue_name = 'mock-sample-queue-test'
+    queue_name = 'mock-sample-queue-dev'
     setup_sqs(queue_name)
     setup_parameter_store('mock_sqs_queue_name', queue_name)
 

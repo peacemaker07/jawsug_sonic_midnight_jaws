@@ -22,7 +22,7 @@ def sqs_trigger_event():
             {
                 "messageId": "cd5844f0-ab00-4fb2-97ad-e2bdeced6b64",
                 "receiptHandle": "AQEB2JbFPLIiPMt4ROd7YbpcS4chPywRAY6GtWk0vMXFKvzy/thtb4sYQ2xKWUsFcsaTylTJNb9ZTfoeSjgbUaettggmSt3VxBxMdgsaNT9WoKT/bBUESWPkUMlHAtXsFGrjMvt93MqQvaGtWo0fVy17Q5ry3wGaYDmTYnl8Y5H7C4XetSg0Gtj9HA9KMt/qb1p2rXCbv+a4F6CwvGQgBXE027/EVbcsCiADIMDMLoGUNZYg782t6l1FPHp7rkyMgdF/ZMOqohQH9zfkyVivAGRpGJepLSQ6zyJD+Se81Ro+cEqMXcxAM6pBrI2S0TatD5jr3N6Bd0A70/yx1MUVY5En2WKzyFyc647GDpSWDUo9EYIrUQCQ6RtR/rzjaQyr23KjP//l53eNsf80ZGuKkMcKut149oI1PvqVnoh+502AM2g=",
-                "body": "{\"bucket_name\": \"mock-aws-with-moto-test\", \"obj_key\": \"uploads/350C448F-0B64-4FAC-AE46-CAA2A9A21048.jpg\"}",
+                "body": "{\"bucket_name\": \"mock-aws-with-moto-dev\", \"obj_key\": \"uploads/350C448F-0B64-4FAC-AE46-CAA2A9A21048.jpg\"}",
                 "attributes": {
                     "ApproximateReceiveCount": "1",
                     "SentTimestamp": "1598710272184",
