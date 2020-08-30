@@ -10,44 +10,40 @@ def s3_trigger_and_move(event, context):
     """
     event内容:
     {
-        "Records":
-            [
-                {
-                    "eventVersion": "2.1",
-                    "eventSource": "aws:s3",
-                    "awsRegion": "ap-northeast-1",
-                    "eventTime": "2020-08-29T10:38:27.247Z",
-                    "eventName": "ObjectCreated:Put",
-                    "userIdentity": {
-                        "principalId": "AWS:XXXX"
+        "Records": [{
+            "eventVersion": "2.1",
+            "eventSource": "aws:s3",
+            "awsRegion": "ap-northeast-1",
+            "eventTime": "2020-08-29T10:38:27.247Z",
+            "eventName": "ObjectCreated:Put",
+            "userIdentity": {
+                "principalId": "AWS:XXXX"
+            },
+            "requestParameters": {
+                "sourceIPAddress": "XXX.XXX.XXX.XXX"
+            },
+            "responseElements": {
+                "x-amz-request-id": "F14105EF5F76A5A7",
+                "x-amz-id-2": "KohLZ6InlVR8BvO6G8/s80pZU1MzpHp/wnXK1CmEv6DioxJgY8rEGaMZAieWletHP1YVbhOo6NE1Jha4Rc6r8H+l/KBTf4y3"
+            },
+            "s3": {
+                "s3SchemaVersion": "1.0",
+                "configurationId": "jawsug-sonic-midnight-jaws-dev-s3_trigger_and_move-e9570fa7c86cce4df943f4c116563d60",
+                "bucket": {
+                    "name": "mock-aws-with-moto-dev",
+                    "ownerIdentity": {
+                        "principalId": "XXXX"
                     },
-                    "requestParameters": {
-                        "sourceIPAddress": "XXX.XXX.XXX.XXX"
-                    },
-                    "responseElements": {
-                        "x-amz-request-id": "F14105EF5F76A5A7",
-                        "x-amz-id-2": "KohLZ6InlVR8BvO6G8/s80pZU1MzpHp/wnXK1CmEv6DioxJgY8rEGaMZAieWletHP1YVbhOo6NE1Jha4Rc6r8H+l/KBTf4y3"
-                    },
-                    "s3": {
-                        "s3SchemaVersion": "1.0",
-                        "configurationId": "jawsug-sonic-midnight-jaws-dev-s3_trigger_and_move-e9570fa7c86cce4df943f4c116563d60",
-                        "bucket": {
-                            "name": "mock-aws-with-moto-dev",
-                            "ownerIdentity": {
-                                "principalId": "XXXX"
-                            },
-                            "arn": "arn:aws:s3:::mock-aws-with-moto-dev"
-                        },
-                        "object": {
-                            "key": "uploads/0089BAC2-DF5C-43DE-9AAA-5468CCA70AF6.jpg",
-                            "size": 39008,
-                            "eTag": "8e86e2bee80365e689e2094c515230a1",
-                            "sequencer": "005F4A3025CD5381B7"
-                        }
-                    }
+                    "arn": "arn:aws:s3:::mock-aws-with-moto-dev"
+                },
+                "object": {
+                    "key": "uploads/0089BAC2-DF5C-43DE-9AAA-5468CCA70AF6.jpg",
+                    "size": 39008,
+                    "eTag": "8e86e2bee80365e689e2094c515230a1",
+                    "sequencer": "005F4A3025CD5381B7"
                 }
-            ]
-        }
+            }
+        }]
     }
     """
 

@@ -1,12 +1,22 @@
+import os
 import boto3
 
+from tests.helper import get_abspath
 
-def setup_s3(bucket_name='mock-aws-with-moto-test'):
+
+def setup_s3(bucket_name, obj_key=None):
 
     # bucket
-    s3_resource = boto3.resource('s3')
-    bucket = s3_resource.Bucket(bucket_name)
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket(bucket_name)
     bucket.create()
+
+    # put
+    if obj_key:
+        # put image
+        bucket = s3.Bucket(bucket_name)
+        data = open(os.path.join(get_abspath(), 'GL_LOGO.jpg'), mode='rb')
+        result = bucket.put_object(Key=obj_key, Body=data)
 
 
 def setup_dynamodb_s3_info():
@@ -41,7 +51,7 @@ def setup_dynamodb_s3_info():
     )
 
 
-def setup_sqs(name='mock-sample-queue-dev'):
+def setup_sqs(name):
 
     sqs = boto3.resource('sqs', region_name='ap-northeast-1')
     return sqs.create_queue(
@@ -52,7 +62,7 @@ def setup_sqs(name='mock-sample-queue-dev'):
     )
 
 
-def get_sqs_messages(name='mock-sample-queue-dev'):
+def get_sqs_messages(name):
 
     sqs = boto3.resource('sqs', region_name='ap-northeast-1')
     queue = sqs.get_queue_by_name(QueueName=name)
