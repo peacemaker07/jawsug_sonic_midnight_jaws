@@ -12,7 +12,7 @@ from tests.resources.aws import (
 )
 from handler import s3_trigger_and_move
 
-s3 = boto3.client('s3', region_name='ap-northeast-1')
+s3 = boto3.client('s3')
 
 
 @pytest.fixture()
